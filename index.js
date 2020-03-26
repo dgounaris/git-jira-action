@@ -31,7 +31,7 @@ async function run() {
       console.log(jiraIssueStatus);
 
       if (jiraIssueStatus === 'Done') {
-          closeGithubIssue(inputs.owner, repo, inputs.issue);
+          closeGithubIssue(inputs.owner, repo, inputs.issue, inputs.token);
       }
     } catch (error) {
         core.error(error);
@@ -52,9 +52,20 @@ async function getGithubIssueFirstComment(owner, repo, issue) {
     }
 }
 
-async function closeGithubIssue(owner, repo, issue) {
+async function closeGithubIssue(owner, repo, issue, token) {
     try {
-        const response = await axios.patch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue}?state=closed`);
+        let config = {
+            headers: {
+              'Authorization': `token ${token}`,
+            }
+          }
+          
+          let data = {
+            'state': 'closed'
+          }
+        const response = await axios.patch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue}`, data, config);
+        console.log('Github ticket post patch:\n');
+        console.log(response);
     } catch (error) {
         core.error(error);
         return '';
