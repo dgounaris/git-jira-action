@@ -23,7 +23,7 @@ async function run() {
       const repo = repository.split("/");
       console.log(`repository: ${repository}`);
 
-      const issueFirstComment = await getGithubIssueFirstComment(inputs.owner, repo, issue)
+      const issueFirstComment = await getGithubIssueFirstComment(inputs.owner, repo, inputs.issue)
       console.log('First commit message: ' + issueFirstComment);
       
       const jiraIssueKey = issueFirstComment.split(' ').pop();
