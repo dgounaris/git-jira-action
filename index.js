@@ -17,9 +17,9 @@ async function run() {
         repository: core.getInput("repository"),
         issue: core.getInput("issue")
       };
-      const repo = getSanitizedRepo(inputs.repository)
+      const repo = await getSanitizedRepo(inputs.repository)
 
-      operateForIssue(inputs.owner, repo, inputs.issue, inputs.token);
+      await operateForIssue(inputs.owner, repo, inputs.issue, inputs.token);
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);
