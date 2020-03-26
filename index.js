@@ -20,7 +20,7 @@ async function run() {
 
       const issues = await getAllIssues(inputs.owner, repo, inputs.token);
 
-      issues.forEach(issue => {
+      issues.forEach(async (issue) => {
           const issueNumber = issue.number;
           await operateForIssue(inputs.owner, repo, issueNumber, inputs.token);
       });
