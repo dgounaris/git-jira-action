@@ -66,6 +66,9 @@ async function getJiraIssueStatus(jiraIssue) {
         config,
         jiraIssue
     }).execute()
+    console.log('Jira issue retrieved:\n');
+    console.log(issue);
+    console.log('\n');
     const issueStatus = issue.fields.status.name;
     return issueStatus;
 }
