@@ -1,3 +1,5 @@
+// shoutout to https://github.com/atlassian/gajira-find-issue-key
+
 const _ = require('lodash')
 const Jira = require('./Jira')
 

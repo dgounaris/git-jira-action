@@ -1,3 +1,5 @@
+// shoutout to https://github.com/atlassian/gajira-find-issue-key
+
 const fetch = require('node-fetch')
 // const moment = require('moment')
 

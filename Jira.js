@@ -1,3 +1,5 @@
+// shoutout to https://github.com/atlassian/gajira-create
+
 const { get } = require('lodash')
 const axios = require('axios');
 

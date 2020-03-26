@@ -14,12 +14,16 @@ async function run() {
       const inputs = {
         token: core.getInput("token"),
         owner: core.getInput("owner"),
-        repository: core.getInput("repository"),
-        issue: core.getInput("issue")
+        repository: core.getInput("repository")
       };
       const repo = await getSanitizedRepo(inputs.repository)
 
-      await operateForIssue(inputs.owner, repo, inputs.issue, inputs.token);
+      const issues = await getAllIssues(inputs.owner, repo, inputs.token);
+
+      issues.forEach(issue => {
+          const issueNumber = issue.number;
+          await operateForIssue(inputs.owner, repo, issueNumber, inputs.token);
+      });
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);
@@ -31,13 +35,34 @@ async function getSanitizedRepo(rawRepo) {
       ? rawRepo
       : process.env.GITHUB_REPOSITORY;
     const repo = repository.split("/");
-    console.log(`repository: ${repository}`);
+    console.log(`repository: ${repo}`);
     return repo;
 }
 
+async function getAllIssues(owner, repo, token) {
+    try {
+        let config = {
+            headers: {
+              'Authorization': `token ${token}`,
+            }
+          }
+        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/issues`, config);
+        console.log('Full response:\n');
+        console.log(response)
+        console.log('\n')
+        return response;
+    } catch (error) {
+        core.error(error);
+        return '';
+    }
+}
+
 async function operateForIssue(owner, repo, issue, token) {
-    const issueFirstComment = await getGithubIssueFirstComment(owner, repo, issue)
+    const issueFirstComment = await getGithubIssueFirstComment(owner, repo, issue, token)
     console.log('First commit message: ' + issueFirstComment);
+    if (!(/^Automatically created Jira issue: [A-Z]+-\d+/.test(issueFirstComment))) {
+        return;
+    }
     const jiraIssueKey = issueFirstComment.split(' ').pop();
     
     const jiraIssueStatus = await getJiraIssueStatus(jiraIssueKey);
@@ -48,9 +73,14 @@ async function operateForIssue(owner, repo, issue, token) {
     }
 }
 
-async function getGithubIssueFirstComment(owner, repo, issue) {
+async function getGithubIssueFirstComment(owner, repo, issue, token) {
     try {
-        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/issues/${issue}/comments`);
+        let config = {
+            headers: {
+              'Authorization': `token ${token}`,
+            }
+          }
+        const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/issues/${issue}/comments`, config);
         console.log('Full response:\n');
         console.log(response)
         console.log('\n')
