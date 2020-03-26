@@ -13,7 +13,7 @@ module.exports = class {
   }
 
   async execute () {
-      console.log(`Issue to search jira for: ${jiraIssue}`)
-    return await this.Jira.getIssue(jiraIssue)
+      console.log(`Issue to search jira for: ${this.jiraIssue}`)
+    return await this.Jira.getIssue(this.jiraIssue)
   }
 }
