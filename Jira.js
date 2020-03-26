@@ -1,4 +1,4 @@
-// shoutout to https://github.com/atlassian/gajira-create
+// shoutout to https://github.com/atlassian/gajira-find-issue-key
 
 const { get } = require('lodash')
 const axios = require('axios');
