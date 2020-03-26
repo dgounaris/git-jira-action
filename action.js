@@ -20,6 +20,7 @@ module.exports = class {
   }
 
   async execute () {
+      console.log(`Issue to search jira for: ${issueKey}`)
     return await this.Jira.getIssue(issueKey)
   }
 }

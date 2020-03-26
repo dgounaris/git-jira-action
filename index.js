@@ -17,8 +17,6 @@ async function run() {
         repository: core.getInput("repository"),
         issue: core.getInput("issue")
       };
-      console.log(`Inputs: ${inputs}`);
-
       const repository = inputs.repository
       ? inputs.repository
       : process.env.GITHUB_REPOSITORY;
