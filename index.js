@@ -30,6 +30,7 @@ async function run() {
       
       const jiraIssueKey = issueFirstComment.split(' ').pop();
       const issue = getJiraIssueStatus();
+      console.log(issue);
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);
