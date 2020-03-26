@@ -27,7 +27,7 @@ async function run() {
       console.log('First commit message: ' + issueFirstComment);
       
       const jiraIssueKey = issueFirstComment.split(' ').pop();
-      const issue = getJiraIssueStatus(jiraIssueKey);
+      const issue = await getJiraIssueStatus(jiraIssueKey);
       console.log(issue);
     } catch (error) {
         core.error(error);
