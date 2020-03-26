@@ -17,25 +17,34 @@ async function run() {
         repository: core.getInput("repository"),
         issue: core.getInput("issue")
       };
-      const repository = inputs.repository
-      ? inputs.repository
-      : process.env.GITHUB_REPOSITORY;
-      const repo = repository.split("/");
-      console.log(`repository: ${repository}`);
+      const repo = getSanitizedRepo(inputs.repository)
 
-      const issueFirstComment = await getGithubIssueFirstComment(inputs.owner, repo, inputs.issue)
-      console.log('First commit message: ' + issueFirstComment);
-      const jiraIssueKey = issueFirstComment.split(' ').pop();
-      
-      const jiraIssueStatus = await getJiraIssueStatus(jiraIssueKey);
-      console.log(jiraIssueStatus);
-
-      if (jiraIssueStatus === 'Done') {
-          closeGithubIssue(inputs.owner, repo, inputs.issue, inputs.token);
-      }
+      operateForIssue(inputs.owner, repo, inputs.issue, inputs.token);
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);
+    }
+}
+
+async function getSanitizedRepo(rawRepo) {
+    const repository = rawRepo
+      ? rawRepo
+      : process.env.GITHUB_REPOSITORY;
+    const repo = repository.split("/");
+    console.log(`repository: ${repository}`);
+    return repo;
+}
+
+async function operateForIssue(owner, repo, issue, token) {
+    const issueFirstComment = await getGithubIssueFirstComment(owner, repo, issue)
+    console.log('First commit message: ' + issueFirstComment);
+    const jiraIssueKey = issueFirstComment.split(' ').pop();
+    
+    const jiraIssueStatus = await getJiraIssueStatus(jiraIssueKey);
+    console.log(jiraIssueStatus);
+
+    if (jiraIssueStatus === 'Done') {
+        closeGithubIssue(owner, repo, issue, token);
     }
 }
 
