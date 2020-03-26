@@ -13,9 +13,9 @@ async function run() {
     try {
       const inputs = {
         token: core.getInput("token"),
-        owner: 'dgounaris',
-        repository: 'test-jira-actions',
-        issue: '26'
+        owner: core.getInput("owner"),
+        repository: core.getInput("repository"),
+        issue: core.getInput("issue")
       };
       console.log(`Inputs: ${inputs}`);
 
@@ -25,10 +25,11 @@ async function run() {
       const repo = repository.split("/");
       console.log(`repository: ${repository}`);
 
-      const issueFirstComment = await getGithubIssueFirstComment(inputs.owner, repo, '26')
+      const issueFirstComment = await getGithubIssueFirstComment(inputs.owner, repo, issue)
       console.log('First commit message: ' + issueFirstComment);
-      const jiraIssue = issueFirstComment.split(' ').pop()
-
+      
+      const jiraIssueKey = issueFirstComment.split(' ').pop();
+      const issue = getJiraIssueStatus();
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);
