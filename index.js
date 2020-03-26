@@ -29,6 +29,9 @@ async function run() {
       const jiraIssueKey = issueFirstComment.split(' ').pop();
       const issue = await getJiraIssueStatus(jiraIssueKey);
       console.log(issue);
+      
+      const issueStatus = issue.fields.status.name;
+      console.log(issueStatus);
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);

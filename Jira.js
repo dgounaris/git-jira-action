@@ -17,7 +17,7 @@ class Jira {
 
     try {
       const res = await this.fetch('getIssue', {
-        pathname: `/rest/api/3/issue/${issueId}/transitions`,
+        pathname: `/rest/api/3/issue/${issueId}`,
         query: {
           fields: fields.join(','),
           expand: expand.join(','),
