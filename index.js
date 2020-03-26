@@ -6,19 +6,19 @@ async function run() {
     try {
       const inputs = {
         token: core.getInput("token"),
-        repository: core.getInput("repository"),
-        owner: core.getInput("owner"),
+        owner: 'dgounaris',
+        repository: 'test-jira-actions'
       };
-      core.debug(`Inputs: ${inspect(inputs)}`);
+      console.log(`Inputs: ${inputs}`);
 
       const repository = inputs.repository
       ? inputs.repository
       : process.env.GITHUB_REPOSITORY;
       const repo = repository.split("/");
-      core.debug(`repository: ${repository}`);
+      console.log(`repository: ${repository}`);
 
       const issueFirstComment = await getIssueFirstComment(inputs.owner, repo, '26')
-      core.info(issueFirstComment);
+      console.log('First commit message: ' + issueFirstComment);
     } catch (error) {
         core.error(error);
         core.setFailed(error.message);
@@ -28,8 +28,10 @@ async function run() {
 async function getIssueFirstComment(owner, repo, issue) {
     try {
         const response = await axios.get('https://api.github.com/repos/' + owner + '/' + repo + '/issues/' + issue + '/comments');
-        core.info(response);
-        return response;
+        console.log('Full response:\n');
+        console.log(response)
+        console.log('\n')
+        return response.data[0].body;
     } catch (error) {
         core.error(error);
         return ''
