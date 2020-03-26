@@ -1,0 +1,16 @@
+name: 'Hello World'
+description: 'Greet someone and record the time'
+inputs:
+  token:
+    description: 'GITHUB_TOKEN or a repo scoped PAT.'
+    required: true
+  repository:
+    description: 'The full name of the repository in which to create or update a comment.'
+  issue-number:
+    description: 'The number of the issue or pull request in which to create a comment.'
+outputs:
+  result: # just a string
+    description: 'A simple ok'
+runs:
+  using: 'node12'
+  main: 'index.js'
