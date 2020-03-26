@@ -8,6 +8,8 @@ inputs:
     description: 'The owner'
   repository:
     description: 'The github project'
+  issue:
+    description: 'The issue to search'
 outputs:
   result: # just a string
     description: 'A simple ok'
