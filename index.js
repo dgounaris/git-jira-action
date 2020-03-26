@@ -27,7 +27,7 @@ async function run() {
       console.log('First commit message: ' + issueFirstComment);
       
       const jiraIssueKey = issueFirstComment.split(' ').pop();
-      const issue = getJiraIssueStatus();
+      const issue = getJiraIssueStatus(jiraIssueKey);
       console.log(issue);
     } catch (error) {
         core.error(error);
@@ -48,7 +48,7 @@ async function getGithubIssueFirstComment(owner, repo, issue) {
     }
 }
 
-async function getJiraIssueStatus() {
+async function getJiraIssueStatus(jiraIssue) {
     return await new Action({
         config,
         jiraIssue
