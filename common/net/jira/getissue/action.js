@@ -3,7 +3,7 @@
 const _ = require('lodash')
 const Jira = require('./Jira')
 
-module.exports = class {
+class JiraGetIssueAction {
   constructor ({ config, jiraIssue }) {
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
@@ -19,3 +19,5 @@ module.exports = class {
     return await this.Jira.getIssue(this.jiraIssue)
   }
 }
+
+module.exports = JiraGetIssueAction;

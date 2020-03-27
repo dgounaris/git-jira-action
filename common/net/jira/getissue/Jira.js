@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const serviceName = 'jira'
 const { format } = require('url')
-const client = require('./client')(serviceName)
+const client = require('../client')(serviceName)
 
 class Jira {
   constructor ({ baseUrl, token, email }) {
