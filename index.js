@@ -9,7 +9,7 @@ const CloseIssueAction = require('./common/net/github/closeIssue/action');
 const GetAllIssuesAction = require('./common/net/github/getAllIssues/action');
 const GetFirstIssueCommentAction = require('./common/net/github/getFirstIssueComment/action');
 
-//const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
+const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
 
 async function run() {
     try {
