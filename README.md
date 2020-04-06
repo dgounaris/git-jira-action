@@ -2,8 +2,6 @@
 
 ## Requirements
 
-This action step requires atlassian/gajira-login to be run before it.
-
 This action step requires the first issue comment to be a linking one between github and jira issues, 
 in the format of "Automatically created Jira issue: XXX-YY"
 
@@ -13,6 +11,10 @@ The plugin takes the following arguments as input:
 - token (a github token with write access to the github repo of interest)
 - owner (the owner of the repository)
 - repository (the name of the repository)
+- jiraBaseUrl (the base url for the jira project)
+- project (the jira project)
+- jiraEmail (the email of the jira account to use, which needs to have write access to the project)
+- jiraToken (an access token of the jira account to use)
 
 ## Usage
 
