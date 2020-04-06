@@ -1,9 +1,8 @@
 const axios = require('axios');
 
 class JiraGetIssueAction {
-  constructor (jiraBaseUrl, jiraProject, jiraIssue, jiraToken) {
+  constructor (jiraBaseUrl, jiraIssue, jiraToken) {
     this.baseUrl = jiraBaseUrl;
-    this.project = jiraProject;
     this.issue = jiraIssue;
     this.token = jiraToken;
   }

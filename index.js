@@ -9,7 +9,6 @@ async function run() {
     try {
       const inputs = {
         jiraBaseUrl: core.getInput('jiraBaseUrl'),
-        project: core.getInput('project'),
         jiraEmail: core.getInput('jiraEmail'),
         jiraToken: core.getInput('jiraToken'),
         token: core.getInput("token"),
@@ -23,7 +22,7 @@ async function run() {
       issues.data.forEach(async (issue) => {
           const issueNumber = issue.number;
           console.log(`Operating for issue: ${issueNumber}`);
-          await operateForIssue(inputs.owner, repo, issueNumber, inputs.token, inputs.jiraBaseUrl, inputs.project, base64token);
+          await operateForIssue(inputs.owner, repo, issueNumber, inputs.token, inputs.jiraBaseUrl, base64token);
       });
     } catch (error) {
         console.log(error);
@@ -40,7 +39,7 @@ async function getSanitizedRepo(rawRepo) {
     return repo;
 }
 
-async function operateForIssue(owner, repo, issue, token, jiraBaseUrl, jiraProject, jiraToken) {
+async function operateForIssue(owner, repo, issue, token, jiraBaseUrl, jiraToken) {
     const issueFirstComment = await new GetFirstIssueCommentAction(owner, repo, issue, token).execute();
     console.log('First commit message: ' + issueFirstComment);
 
@@ -49,7 +48,7 @@ async function operateForIssue(owner, repo, issue, token, jiraBaseUrl, jiraProje
     }
 
     const jiraIssueKey = issueFirstComment.split(' ').pop();
-    const jiraIssueStatus = await getJiraIssueStatus(jiraBaseUrl, jiraProject, jiraIssueKey, jiraToken);
+    const jiraIssueStatus = await getJiraIssueStatus(jiraBaseUrl, jiraIssueKey, jiraToken);
     console.log(jiraIssueStatus);
 
     if (jiraIssueStatus === 'Done') {
@@ -57,10 +56,9 @@ async function operateForIssue(owner, repo, issue, token, jiraBaseUrl, jiraProje
     }
 }
 
-async function getJiraIssueStatus(jiraBaseUrl, jiraProject, jiraIssue, jiraToken) {
+async function getJiraIssueStatus(jiraBaseUrl, jiraIssue, jiraToken) {
     const issue = await new JiraGetIssueAction(
         jiraBaseUrl,
-        jiraProject,
         jiraIssue,
         jiraToken
     ).execute()
