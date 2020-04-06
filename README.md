@@ -13,7 +13,7 @@ The plugin takes the following arguments as input:
 - repository (the name of the repository)
 - jiraBaseUrl (the base url for the jira project)
 - project (the jira project)
-- jiraEmail (the email of the jira account to use, which needs to have write access to the project)
+- jiraEmail (the email of the jira account to use, which needs to have read access to the project)
 - jiraToken (an access token of the jira account to use)
 
 ## Usage
