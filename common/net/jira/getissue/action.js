@@ -1,22 +1,22 @@
-// shoutout to https://github.com/atlassian/gajira-find-issue-key
-
-const _ = require('lodash')
-const Jira = require('./Jira')
+const axios = require('axios');
 
 class JiraGetIssueAction {
-  constructor ({ config, jiraIssue }) {
-    this.Jira = new Jira({
-      baseUrl: config.baseUrl,
-      token: config.token,
-      email: config.email,
-    })
-
-    this.jiraIssue = jiraIssue
+  constructor (jiraBaseUrl, jiraProject, jiraIssue, jiraToken) {
+    this.baseUrl = jiraBaseUrl;
+    this.project = jiraProject;
+    this.issue = jiraIssue;
+    this.token = jiraToken;
   }
 
   async execute () {
-      console.log(`Issue to search jira for: ${this.jiraIssue}`)
-    return await this.Jira.getIssue(this.jiraIssue)
+    console.log(`Issue to search jira for: ${this.jiraIssue}`)
+    let config = {
+      headers: {
+          'Authorization': `Basic ${this.token}`,
+      }
+    }
+
+    return await axios.get(`${this.baseurl}/rest/api/3/issue/${this.issue}`, config);
   }
 }
 

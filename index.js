@@ -1,30 +1,29 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
-const YAML = require('yaml');
-const fs = require('fs');
 
-const configPath = `${process.env.HOME}/jira/config.yml`;
 const JiraGetIssueAction = require('./common/net/jira/getissue/action');
 const CloseIssueAction = require('./common/net/github/closeIssue/action');
 const GetAllIssuesAction = require('./common/net/github/getAllIssues/action');
 const GetFirstIssueCommentAction = require('./common/net/github/getFirstIssueComment/action');
 
-const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
-
 async function run() {
     try {
       const inputs = {
+        jiraBaseUrl: core.getInput('jiraBaseUrl'),
+        project: core.getInput('project'),
+        jiraEmail: core.getInput('jiraEmail'),
+        jiraToken: core.getInput('jiraToken'),
         token: core.getInput("token"),
         owner: core.getInput("owner"),
         repository: core.getInput("repository")
       };
+      const base64token = Buffer.from(`${inputs.jiraEmail}:${inputs.jiraToken}`).toString('base64');
       const repo = await getSanitizedRepo(inputs.repository)
 
       const issues = await new GetAllIssuesAction(inputs.owner, repo, inputs.token).execute();
       issues.data.forEach(async (issue) => {
           const issueNumber = issue.number;
           console.log(`Operating for issue: ${issueNumber}`);
-          await operateForIssue(inputs.owner, repo, issueNumber, inputs.token);
+          await operateForIssue(inputs.owner, repo, issueNumber, inputs.token, inputs.jiraBaseUrl, inputs.project, base64token);
       });
     } catch (error) {
         console.log(error);
@@ -41,7 +40,7 @@ async function getSanitizedRepo(rawRepo) {
     return repo;
 }
 
-async function operateForIssue(owner, repo, issue, token) {
+async function operateForIssue(owner, repo, issue, token, jiraBaseUrl, jiraProject, jiraToken) {
     const issueFirstComment = await new GetFirstIssueCommentAction(owner, repo, issue, token).execute();
     console.log('First commit message: ' + issueFirstComment);
 
@@ -50,7 +49,7 @@ async function operateForIssue(owner, repo, issue, token) {
     }
 
     const jiraIssueKey = issueFirstComment.split(' ').pop();
-    const jiraIssueStatus = await getJiraIssueStatus(jiraIssueKey);
+    const jiraIssueStatus = await getJiraIssueStatus(jiraBaseUrl, jiraProject, jiraIssueKey, jiraToken);
     console.log(jiraIssueStatus);
 
     if (jiraIssueStatus === 'Done') {
@@ -58,11 +57,13 @@ async function operateForIssue(owner, repo, issue, token) {
     }
 }
 
-async function getJiraIssueStatus(jiraIssue) {
-    const issue = await new JiraGetIssueAction({
-        config,
-        jiraIssue
-    }).execute()
+async function getJiraIssueStatus(jiraBaseUrl, jiraProject, jiraIssue, jiraToken) {
+    const issue = await new JiraGetIssueAction(
+        jiraBaseUrl,
+        jiraProject,
+        jiraIssue,
+        jiraToken
+    ).execute()
     //console.log('Jira issue retrieved:\n');
     //console.log(issue);
     //console.log('\n');
